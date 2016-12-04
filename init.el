@@ -4,8 +4,6 @@
 
 ;; Define package repositories
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("tromey" . "http://tromey.com/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -24,6 +22,11 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+;; Bootstrap 'use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; Define he following variables to remove the compile-log warnings
 ;; when defining ido-ubiquitous
 (defvar ido-cur-item nil)
@@ -32,64 +35,56 @@
 (defvar predicate nil)
 (defvar inherit-input-method nil)
 
-;; The packages you want installed. You can also install these
-;; manually with M-x package-install
-;; Add in your own as you wish:
-(defvar my-packages
-  '(;; makes handling lisp expressions much, much easier
-    ;; Cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
-    paredit
+;; makes handling lisp expressions much, much easier
+;; Cheatsheet: http://www.emacswiki.org/emacs/PareditCheatsheet
+(use-package paredit
+             :ensure t)
 
-    ;; key bindings and code colorization for Clojure
-    ;; https://github.com/clojure-emacs/clojure-mode
-    clojure-mode
+;; key bindings and code colorization for Clojur
+;; https://github.com/clojure-emacs/clojure-mode
+(use-package clojure-mode
+             :ensure t)
 
-    ;; extra syntax highlighting for clojure
-    clojure-mode-extra-font-locking
+;; extra syntax highlighting for clojure
+(use-package clojure-mode-extra-font-locking
+             :ensure t)
 
-    ;; integration with a Clojure REPL
-    ;; https://github.com/clojure-emacs/cider
-    cider
+;; integration with a Clojure REPL
+;; https://github.com/clojure-emacs/cider
+(use-package cider
+             :ensure t)
 
-    ;; allow ido usage in as many contexts as possible. see
-    ;; customizations/navigation.el line 23 for a description
-    ;; of ido
-    ido-ubiquitous
+;; allow ido usage in as many contexts as possible. see
+;; customizations/navigation.el line 23 for a description
+;; of ido
+(use-package ido-ubiquitous
+             :ensure t)
 
-    ;; Enhances M-x to allow easier execution of commands. Provides
-    ;; a filterable list of possible commands in the minibuffer
-    ;; http://www.emacswiki.org/emacs/Smex
-    smex
+;; Enhances M-x to allow easier execution of commands. Provides
+;; a filterable list of possible commands in the minibuffer
+;; http://www.emacswiki.org/emacs/Smex
+(use-package smex
+             :ensure t)
 
-    ;; project navigation
-    projectile
+;; project navigation
+(use-package projectile
+             :ensure t)
 
-    ;; colorful parenthesis matching
-    rainbow-delimiters
+;; colorful parenthesis matching
+(use-package rainbow-delimiters
+             :ensure t)
 
-    ;; edit html tags like sexps
-    tagedit
+;; edit html tags like sexps
+(use-package tagedit
+             :ensure t)
 
-    ;; git integration
-    magit))
+;; git integration
+(use-package magit
+             :ensure t)
 
-    ;; Intellij Dark Theme
-    ;;darcula-theme))
-
-;; On OS X, an Emacs instance started from the graphical user
-;; interface will have a different environment than a shell in a
-;; terminal window, because OS X does not run a shell during the
-;; login. Obviously this will lead to unexpected results when
-;; calling external utilities like make from Emacs.
-;; This library works around this problem by copying important
-;; environment variables from the user's shell.
-;; https://github.com/purcell/exec-path-from-shell
-(if (eq system-type 'darwin)
-    (add-to-list 'my-packages 'exec-path-from-shell))
-
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+;; Intellij dark theme
+(use-package darcula-theme
+             :ensure t)
 
 
 ;; Place downloaded elisp files in ~/.emacs.d/vendor. You'll then be able
@@ -138,3 +133,7 @@
 ;; Langauage-specific
 (load "setup-clojure.el")
 (load "setup-js.el")
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
