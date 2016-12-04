@@ -134,6 +134,3 @@
 (load "setup-clojure.el")
 (load "setup-js.el")
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
